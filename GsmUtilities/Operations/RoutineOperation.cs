@@ -4,6 +4,7 @@ using System;
 using System.Collections.Concurrent;
 using System.ComponentModel;
 using System.IO.Ports;
+using System.Text;
 using System.Threading;
 
 namespace GsmUtilities.Operations
@@ -20,10 +21,13 @@ namespace GsmUtilities.Operations
 
             ActivePort = new SerialPort(modem.ComPort)
             {
-                WriteTimeout = modem.SendingTimeout,
-                ReadTimeout = modem.SendingTimeout,
+                Encoding = Encoding.UTF8,
+                WriteTimeout = (modem.SendingTimeout > 500) ? modem.SendingTimeout : 500,
+                ReadTimeout = (modem.SendingTimeout > 500) ? modem.SendingTimeout : 500,
                 RtsEnable = true,
-                DtrEnable = true
+                DtrEnable = true,
+                Handshake = Handshake.None,
+                BaudRate = modem.BaudRate
             };
             AddCallback();
             ActivePort.Open();
@@ -98,7 +102,7 @@ namespace GsmUtilities.Operations
             try
             {
                 if (SignalState != InternalSignalStrength.None) return;
-                Thread.Sleep(1000);
+                PushInitialAtCommand(); 
             }
             catch (Exception ex) { ErrorLogHelper<RoutineOperation>.LogError(ex); }
         }
@@ -116,7 +120,8 @@ namespace GsmUtilities.Operations
         {
             try
             {
-                Thread.Sleep(1000);
+                PushInitialAtCommand();
+                PushEnableErrorCommand();
             }
             catch (Exception ex) { ErrorLogHelper<RoutineOperation>.LogError(ex); }
         }
