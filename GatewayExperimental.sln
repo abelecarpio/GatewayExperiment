@@ -1,0 +1,40 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2013
+VisualStudioVersion = 12.0.21005.1
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GsmManager", "GsmManager\GsmManager.csproj", "{266A32F3-F0F6-472B-B213-7CA8F7B550A4}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GsmUtilities", "GsmUtilities\GsmUtilities.csproj", "{42CFE0F2-17D9-4144-A588-B4C250E55709}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GsmUtilitiesTest", "GsmUtilitiesTest\GsmUtilitiesTest.csproj", "{A9B26D7E-3E21-4060-9DEA-74B5BEC0A28B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GsmManagerTest", "GsmManagerTest\GsmManagerTest.csproj", "{46272403-5761-4F3C-BF5F-6A31456A0213}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{266A32F3-F0F6-472B-B213-7CA8F7B550A4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{266A32F3-F0F6-472B-B213-7CA8F7B550A4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{266A32F3-F0F6-472B-B213-7CA8F7B550A4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{266A32F3-F0F6-472B-B213-7CA8F7B550A4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{42CFE0F2-17D9-4144-A588-B4C250E55709}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{42CFE0F2-17D9-4144-A588-B4C250E55709}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{42CFE0F2-17D9-4144-A588-B4C250E55709}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{42CFE0F2-17D9-4144-A588-B4C250E55709}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A9B26D7E-3E21-4060-9DEA-74B5BEC0A28B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A9B26D7E-3E21-4060-9DEA-74B5BEC0A28B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A9B26D7E-3E21-4060-9DEA-74B5BEC0A28B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A9B26D7E-3E21-4060-9DEA-74B5BEC0A28B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{46272403-5761-4F3C-BF5F-6A31456A0213}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{46272403-5761-4F3C-BF5F-6A31456A0213}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{46272403-5761-4F3C-BF5F-6A31456A0213}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{46272403-5761-4F3C-BF5F-6A31456A0213}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
