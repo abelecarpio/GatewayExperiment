@@ -30,6 +30,7 @@ namespace GsmUtilities.Helpers
         internal const string GET_MESSAGE_CENTER = @"AT+CSCA?" + END_OF_LINE;
         internal const string MESSAGE_CENTER_RESPONSE = "+CSCA";
         internal const string SET_MESSAGE_CENTER = @"AT+CSCA=";
+        internal const string DELETE_MESSAGE = @"AT+CMGD=";
 
 
         internal const string PUSH_MESSAGE = @"AT+CMSS=";

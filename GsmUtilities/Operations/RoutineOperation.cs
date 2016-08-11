@@ -6,11 +6,14 @@ using System.ComponentModel;
 using System.IO.Ports;
 using System.Text;
 using System.Threading;
+using GsmUtilities.Helpers.PduHelpers;
+using GsmUtilities.Models;
 
 namespace GsmUtilities.Operations
 {
     public partial class RoutineOperation
     {
+
         public void Start(SystemSetting setting, ModemDefinition modem)
         {
             if (setting == null) throw new ArgumentNullException("setting", @"System Setting should not be empty.");
@@ -29,7 +32,6 @@ namespace GsmUtilities.Operations
                 Handshake = Handshake.None,
                 BaudRate = modem.BaudRate
             };
-            AddCallback();
             ActivePort.Open();
 
             ProcessWorker = new BackgroundWorker();
@@ -52,6 +54,10 @@ namespace GsmUtilities.Operations
             SignalState = InternalSignalStrength.None;
         }
 
+        public void SendMessage(SmsMessage message) { OutboxMessages.Enqueue(message); }
+
+        #region PRIVATE FUNCTIONS
+
         private void ProcessWorkerOnDoWork(object sender, DoWorkEventArgs args)
         {
             while (!_abortProcess)
@@ -59,17 +65,17 @@ namespace GsmUtilities.Operations
                 try
                 {
                     if (_abortProcess) continue;
-                    else Thread.Sleep(1);
+                    else Thread.Sleep(1000);
 
                     GetSignalStrengthRoutine();
 
                     if (_abortProcess) continue;
-                    else Thread.Sleep(1);
+                    else Thread.Sleep(1000);
 
                     SendMessageRoutine();
 
                     if (_abortProcess) continue;
-                    else Thread.Sleep(1);
+                    else Thread.Sleep(1000);
 
                     ReceivedMessageRoutine();
                 }
@@ -79,39 +85,33 @@ namespace GsmUtilities.Operations
             ProcessWorker = null;
         }
 
-        private void ActivePortOnErrorReceived(object sender, SerialErrorReceivedEventArgs args)
-        {
-            if (args == null) return;
-            NotifyOutputSubcriber(args.ToString());
-        }
-
-        private void ActivePortOnDataReceived(object sender, SerialDataReceivedEventArgs args)
-        {
-            if (sender == null) return;
-            var privateserial = (SerialPort)sender;
-            if (!privateserial.IsOpen) return;
-            var dataReceived = privateserial.ReadExisting();
-            NotifyOutputSubcriber(dataReceived);
-            ParseReceivedData(dataReceived);
-        }
-
-        #region PRIVATE FUNCTIONS
-
         private void GetSignalStrengthRoutine()
         {
-            try
-            {
-                if (SignalState != InternalSignalStrength.None) return;
-                PushInitialAtCommand(); 
-            }
-            catch (Exception ex) { ErrorLogHelper<RoutineOperation>.LogError(ex); }
+            PushInitialAtCommand();
+            PushEnableErrorCommand();
+            SignalState = PushAndGetSignalStrength();
+            NotifyOnSignalStrengthChanged(SignalState);
         }
 
         private void SendMessageRoutine()
         {
             try
             {
-                Thread.Sleep(1000);
+                PushInitialAtCommand();
+                PushEnableErrorCommand();
+                var messageCenter = PushAndGetMessageCenter();
+                if (string.IsNullOrEmpty(messageCenter)) return;
+                SmsMessage queued;
+                OutboxMessages.TryDequeue(out queued);
+                if (queued == null) return;
+                var encoder = new PduEncoder();
+                var encodedmessage = encoder.Encode(queued.MobileNumber, queued.TextMessage, messageCenter);
+                if (encodedmessage == null || encodedmessage.Count < 1) return;
+                PushPduModeCommand();
+                foreach (var codedmessage in encodedmessage)
+                {
+                    PushSendMessageCommand(codedmessage.Value, codedmessage.Key);  
+                }
             }
             catch (Exception ex) { ErrorLogHelper<RoutineOperation>.LogError(ex); }
         }
@@ -122,6 +122,13 @@ namespace GsmUtilities.Operations
             {
                 PushInitialAtCommand();
                 PushEnableErrorCommand();
+                var rawdata = PushAndGetMessages();
+                var smslist = ParseIncomingMessage(rawdata);
+                foreach (var smsMessage in smslist)
+                {
+                    InboxMessages.Enqueue(smsMessage);
+                    NotifyOnReceivedQueueChanged();
+                }
             }
             catch (Exception ex) { ErrorLogHelper<RoutineOperation>.LogError(ex); }
         }
@@ -137,8 +144,25 @@ namespace GsmUtilities.Operations
         private bool LocalIsRoutineRunning { get; set; }
         public bool IsRoutineRunning { get { return LocalIsRoutineRunning; } }
         internal InternalSignalStrength SignalState { get; set; }
-        
+
         #endregion PROPERTIES
+
+        #region FOR MESSAGES
+
+        #region INBOX
+
+        private ConcurrentQueue<SmsMessage> InboxMessages { get; set; }
+        private BackgroundWorker ReceivedProcessor { get; set; }
+
+        #endregion
+
+        #region OUTBOX
+        private ConcurrentQueue<SmsMessage> OutboxMessages { get; set; }
+
+        #endregion
+
+        #endregion
+
 
     }
 }

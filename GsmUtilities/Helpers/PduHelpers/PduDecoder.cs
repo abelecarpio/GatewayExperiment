@@ -58,9 +58,9 @@ namespace GsmUtilities.Helpers.PduHelpers
             }
             if (userDataLength < 1) return returnValue;
             returnValue.LocalMessage = PduHelper.DecodeMessage(returnValue.LocalDataCodingSheme, source, userDataLength, userdataheaderlength);
-            returnValue.LocalMessage = returnValue.LocalMessage.Substring(
-                userdataheaderlength + (returnValue.UserDataStartsWithHeader ? 2 : 0
-                ));
+            //returnValue.LocalMessage = returnValue.LocalMessage.Substring(
+            //    userdataheaderlength + (returnValue.UserDataStartsWithHeader ? 2 : 0
+            //    ));
             return returnValue;
         }
     }

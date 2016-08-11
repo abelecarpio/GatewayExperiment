@@ -147,7 +147,9 @@ namespace GsmUtilities
         {
             if (!RelayIsReady)
                 throw new MethodAccessException("Utility Relay is not yet ready, try again later.");
-
+            if (!LocalOutboxMessages.TryAdd(message.MessageId, message))
+                throw new FieldAccessException("Unable to queue the message, try again later.");
+            NotifyOnSendQueueChanged();
         }
 
         #endregion PUBLIC FUNCTIONS
@@ -239,6 +241,14 @@ namespace GsmUtilities
                 OnSignalStrengthChanged = NotifyOnSignalStrengthChanged
             };
 
+            if (LocalOutboxMessages != null)
+            {
+                foreach (var localOutboxMessage in LocalOutboxMessages.OrderByDescending(x=>x.Value.Priority))
+                {
+                    RoutineOps.SendMessage(localOutboxMessage.Value);
+                }
+            }
+            RoutineOps.SendMessage(new SmsMessage(){MobileNumber = "222", TextMessage = "Bal", Priority = MessagePriority.Urgent});
             RoutineOps.Start(ActiveSystemSetting, ActiveModemDefinition);
             NotifyOnProcessStateChanged();
         }

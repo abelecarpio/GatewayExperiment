@@ -62,6 +62,7 @@
     <Compile Include="GsmUtilityEnum.cs" />
     <Compile Include="GsmUtilityRelayCommon.cs" />
     <Compile Include="GsmUtilityRelay.cs" />
+    <Compile Include="GsmUtilityRelayTest.cs" />
     <Compile Include="Helpers\CommonHelper.cs" />
     <Compile Include="Helpers\CommunicationLogHelper.cs" />
     <Compile Include="Helpers\ComPortHelper.cs" />

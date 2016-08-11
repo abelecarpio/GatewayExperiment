@@ -43,10 +43,40 @@ namespace GsmUtilities.Operations
 
         public Action<SignalStrength> OnSignalStrengthChanged { get; set; }
 
-        private void NotifyOnSignalStrengthChanged(SignalStrength signal)
+        private void NotifyOnSignalStrengthChanged(InternalSignalStrength signal)
         {
             if (OnSignalStrengthChanged == null) return;
-            OnSignalStrengthChanged.BeginInvoke(signal, null, null);
+
+            switch (signal)
+            {
+                case InternalSignalStrength.None:
+                    OnSignalStrengthChanged.BeginInvoke(SignalStrength.Offline, null, null);
+                    break;
+
+                case InternalSignalStrength.Offline:
+                      OnSignalStrengthChanged.BeginInvoke(SignalStrength.Offline, null, null);
+                    break;
+
+                case InternalSignalStrength.Low:
+                      OnSignalStrengthChanged.BeginInvoke(SignalStrength.Low, null, null);
+                    break;
+
+                case InternalSignalStrength.Fair:
+                      OnSignalStrengthChanged.BeginInvoke(SignalStrength.Fair, null, null);
+                    break;
+
+                case InternalSignalStrength.Good:
+                      OnSignalStrengthChanged.BeginInvoke(SignalStrength.Good, null, null);
+                    break;
+
+                case InternalSignalStrength.Excellent:
+                      OnSignalStrengthChanged.BeginInvoke(SignalStrength.Excellent, null, null);
+                    break;
+
+                default:
+                      OnSignalStrengthChanged.BeginInvoke(SignalStrength.Offline, null, null);
+                    break;
+            }
         }
 
 

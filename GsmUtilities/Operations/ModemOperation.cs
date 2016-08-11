@@ -69,20 +69,6 @@ namespace GsmUtilities.Operations
        
         #endregion GET MESSAGES
 
-        #region SEND MESSAGE
-
-        internal void SendMessage(ModemPreference modem, string mobileNumber, string pdumessage)
-        {
-            try
-            {
-                if (modem == null) return;
-                var modemhelper = new GsmModemHelper(modem.ComPort) { OnActivityChanged = NotifyActivityChanged };
-                modemhelper.SendMessage(mobileNumber, pdumessage);
-            }
-            catch (Exception ex) { ErrorLogHelper<ModemOperation>.LogError(ex); }
-        }
-
-        #endregion SEND MESSAGE
 
         #region PRIVATE PROPERTIES
 

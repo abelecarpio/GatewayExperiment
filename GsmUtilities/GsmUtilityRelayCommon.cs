@@ -67,8 +67,7 @@ namespace GsmUtilities
             OnProcessStateChanged.BeginInvoke(null, null);
         }
         #endregion PUBLIC CALLBACKS
-
-
+        
         #region CONSTRUCTORS
 
         private GsmUtilityRelay()
